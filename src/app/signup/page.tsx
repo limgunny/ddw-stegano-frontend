@@ -43,8 +43,12 @@ export default function SignUpPage() {
 
       setSuccess('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.')
       setTimeout(() => router.push('/login'), 2000)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError('알 수 없는 오류가 발생했습니다.')
+      }
     } finally {
       setIsLoading(false)
     }

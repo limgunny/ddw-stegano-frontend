@@ -1,7 +1,7 @@
 // c:\Users\a\Desktop\발표\dct-ddw-watermark\frontend\src\app\page.tsx
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, use } from 'react'
 import Link from 'next/link'
 
 interface Post {
@@ -30,8 +30,12 @@ export default function HomePage() {
         }
         const data = await response.json()
         setPosts(data)
-      } catch (err: any) {
-        setError(err.message)
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message)
+        } else {
+          setError('알 수 없는 오류가 발생했습니다.')
+        }
       } finally {
         setIsLoading(false)
       }

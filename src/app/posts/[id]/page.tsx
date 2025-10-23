@@ -58,8 +58,12 @@ export default function PostDetailPage() {
         }
         const data = await response.json()
         setPost(data)
-      } catch (err: any) {
-        setError(err.message)
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message)
+        } else {
+          setError('알 수 없는 오류가 발생했습니다.')
+        }
       } finally {
         setIsLoading(false)
       }
@@ -86,8 +90,12 @@ export default function PostDetailPage() {
         }
         alert('게시물이 삭제되었습니다.')
         router.push('/')
-      } catch (err: any) {
-        alert(err.message)
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          alert(err.message)
+        } else {
+          alert('알 수 없는 오류가 발생했습니다.')
+        }
       }
     }
   }
@@ -146,12 +154,16 @@ export default function PostDetailPage() {
         )
       }
       localStorage.setItem('likedPosts', JSON.stringify(likedPosts))
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('추천 처리 중 오류 발생:', err)
       // Revert optimistic update on network error
       setHasLiked(!newHasLiked)
       setPost((prev) => (prev ? { ...prev, likes: originalLikes } : null))
-      alert(err.message)
+      if (err instanceof Error) {
+        alert(err.message)
+      } else {
+        alert('알 수 없는 오류가 발생했습니다.')
+      }
     }
   }
 
