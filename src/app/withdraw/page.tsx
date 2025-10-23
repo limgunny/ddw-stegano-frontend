@@ -38,8 +38,12 @@ export default function WithdrawPage() {
       alert(data.message || '회원 탈퇴가 처리되었습니다.')
       logout()
       router.push('/')
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError('알 수 없는 오류가 발생했습니다.')
+      }
     } finally {
       setIsLoading(false)
     }
@@ -62,7 +66,7 @@ export default function WithdrawPage() {
               htmlFor="confirmation"
               className="block mb-2 text-sm font-medium text-gray-300"
             >
-              탈퇴를 확정하시려면 아래에 "delete"를 입력해주세요.
+              탈퇴를 확정하시려면 아래에 &quot;delete&quot;를 입력해주세요.
             </label>
             <input
               type="text"

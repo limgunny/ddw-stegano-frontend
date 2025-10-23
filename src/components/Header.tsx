@@ -1,6 +1,4 @@
 'use client'
-
-import { useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
@@ -14,7 +12,7 @@ import {
 } from '@heroicons/react/24/outline'
 
 export default function Header() {
-  const { user, logout, isLoading, token } = useAuth()
+  const { user, logout, isLoading } = useAuth()
   const router = useRouter()
 
   const handleLogout = () => {
