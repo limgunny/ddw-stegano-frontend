@@ -76,10 +76,15 @@ export default function MyPostsPage() {
                       headers: { Authorization: `Bearer ${token}` },
                     }
                   )
-                  if (!response.ok) throw new Error('삭제 실패')
+                  if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}))
+                    throw new Error(
+                      errorData.error || '게시물 삭제에 실패했습니다.'
+                    )
+                  }
                   setPosts(posts.filter((p) => p._id !== post._id))
-                } catch (err) {
-                  alert('게시물 삭제 중 오류가 발생했습니다.')
+                } catch (err: any) {
+                  alert(err.message || '게시물 삭제 중 오류가 발생했습니다.')
                 }
               }
             }
