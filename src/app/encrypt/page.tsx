@@ -11,17 +11,8 @@ export default function EncryptPage() {
   const [content, setContent] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const { user, token, isLoading: authIsLoading } = useAuth()
+  const { token } = useAuth()
   const router = useRouter()
-
-  // This is a placeholder for the watermark message, which is now handled on the backend.
-  const [message, setMessage] = useState('')
-
-  useEffect(() => {
-    if (user) {
-      setMessage(user.email)
-    }
-  }, [user])
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -106,6 +97,7 @@ export default function EncryptPage() {
               <p className="text-sm font-medium text-gray-300 mb-2">
                 이미지 미리보기:
               </p>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={imagePreview}
                 alt="Image preview"

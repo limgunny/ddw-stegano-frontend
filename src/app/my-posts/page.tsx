@@ -83,8 +83,12 @@ export default function MyPostsPage() {
                     )
                   }
                   setPosts(posts.filter((p) => p._id !== post._id))
-                } catch (err: any) {
-                  alert(err.message || '게시물 삭제 중 오류가 발생했습니다.')
+                } catch (err: unknown) {
+                  if (err instanceof Error) {
+                    alert(err.message)
+                  } else {
+                    alert('게시물 삭제 중 오류가 발생했습니다.')
+                  }
                 }
               }
             }
