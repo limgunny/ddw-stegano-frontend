@@ -36,7 +36,7 @@ export default function HeaderNav() {
         alert('회원 탈퇴가 완료되었습니다.')
         logout()
         router.push('/')
-      } catch (err) {
+      } catch {
         alert('회원 탈퇴 중 오류가 발생했습니다.')
       }
     }

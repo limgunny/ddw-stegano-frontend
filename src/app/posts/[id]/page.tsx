@@ -70,7 +70,7 @@ export default function PostDetailPage() {
     }
 
     fetchPost()
-  }, [id, user])
+  }, [id])
 
   const handleDelete = async () => {
     if (!token || !post) return

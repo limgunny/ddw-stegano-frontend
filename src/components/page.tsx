@@ -67,6 +67,7 @@ export default function MyPostsPage() {
               href={`/posts/${post._id}`}
               className="group block bg-white rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105"
             >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={post.imageUrl}
                 alt={post.title}

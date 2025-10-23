@@ -1,7 +1,7 @@
 // c:\Users\a\Desktop\발표\dct-ddw-watermark\frontend\src\app\page.tsx
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, use } from 'react'
 import Link from 'next/link'
 
 interface Post {
