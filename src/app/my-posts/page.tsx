@@ -95,6 +95,7 @@ export default function MyPostsPage() {
                 className="relative group bg-gray-800 rounded-xl shadow-md overflow-hidden transform transition-transform hover:-translate-y-1"
               >
                 <Link href={`/posts/${post._id}`} className="block">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={post.imageUrl}
                     alt={post.title}

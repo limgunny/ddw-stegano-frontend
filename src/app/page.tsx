@@ -1,7 +1,7 @@
 // c:\Users\a\Desktop\발표\dct-ddw-watermark\frontend\src\app\page.tsx
 'use client'
 
-import { useEffect, useState, use } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
 interface Post {
@@ -78,6 +78,7 @@ export default function HomePage() {
                 className="group block bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden transform hover:-translate-y-1 border border-transparent hover:border-purple-500"
               >
                 <div className="relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={post.imageUrl}
                     alt={post.title}

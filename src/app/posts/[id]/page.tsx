@@ -70,7 +70,7 @@ export default function PostDetailPage() {
     }
 
     fetchPost()
-  }, [id])
+  }, [id, user])
 
   const handleDelete = async () => {
     if (!token || !post) return
@@ -214,6 +214,7 @@ export default function PostDetailPage() {
           </div>
 
           <div className="mb-8">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={post.imageUrl}
               alt={post.title}
