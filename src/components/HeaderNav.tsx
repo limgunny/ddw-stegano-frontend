@@ -1,0 +1,123 @@
+'use client'
+
+import { useState } from 'react'
+import Link from 'next/link'
+import { useAuth } from '@/contexts/AuthContext'
+import { useRouter } from 'next/navigation'
+
+export default function HeaderNav() {
+  const { user, logout, isLoading, token } = useAuth()
+  const router = useRouter()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const handleLogout = () => {
+    if (window.confirm('정말 로그아웃 하시겠습니까?')) {
+      logout()
+      router.push('/')
+    }
+  }
+
+  const handleWithdraw = async () => {
+    if (
+      window.confirm(
+        '정말 탈퇴하시겠습니까? 모든 게시물과 정보가 영구적으로 삭제됩니다.'
+      )
+    ) {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users/me`,
+          {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        if (!response.ok) throw new Error('회원 탈퇴에 실패했습니다.')
+
+        alert('회원 탈퇴가 완료되었습니다.')
+        logout()
+        router.push('/')
+      } catch (err) {
+        alert('회원 탈퇴 중 오류가 발생했습니다.')
+      }
+    }
+  }
+
+  return (
+    <nav className="hidden md:flex items-center space-x-4">
+      {!isLoading && (
+        <>
+          <Link
+            href="/encrypt"
+            className="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+          >
+            Encrypt
+          </Link>
+          <Link
+            href="/decrypt"
+            className="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+          >
+            Decrypt
+          </Link>
+          {user ? (
+            <>
+              <div
+                className="relative"
+                onMouseEnter={() => setIsMenuOpen(true)}
+                onMouseLeave={() => setIsMenuOpen(false)}
+              >
+                <span className="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900 cursor-pointer transition-colors">
+                  {user.email}님
+                </span>
+                {isMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 ring-1 ring-black ring-opacity-5">
+                    {user.role === 'admin' && (
+                      <Link
+                        href="/admin"
+                        className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                      >
+                        관리자 페이지
+                      </Link>
+                    )}
+                    <Link
+                      href="/my-posts"
+                      className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                    >
+                      게시글 모아보기
+                    </Link>
+                    <button
+                      onClick={handleWithdraw}
+                      className="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                    >
+                      회원탈퇴
+                    </button>
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={handleLogout}
+                className="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/signup"
+                className="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+              >
+                Sign Up
+              </Link>
+              <Link
+                href="/login"
+                className="px-3 py-2 rounded-md text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 transition-colors"
+              >
+                Login
+              </Link>
+            </>
+          )}
+        </>
+      )}
+    </nav>
+  )
+}
