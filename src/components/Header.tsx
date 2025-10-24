@@ -48,20 +48,6 @@ export default function Header() {
               <InformationCircleIcon className="h-5 w-5" />
               소개
             </Link>
-            <Link
-              href="/encrypt"
-              className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
-            >
-              <ArrowUpTrayIcon className="h-5 w-5" />
-              업로드
-            </Link>
-            <Link
-              href="/decrypt"
-              className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
-            >
-              <DocumentMagnifyingGlassIcon className="h-5 w-5" />
-              원본 저작자 확인
-            </Link>
             {user ? (
               <>
                 <div className="group relative py-2">
@@ -93,12 +79,22 @@ export default function Header() {
                     </Link>
                   </div>
                 </div>
-                <button
-                  onClick={handleLogout}
-                  className="block w-full text-left px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
-                >
-                  Logout
-                </button>
+                <div className="border-t border-gray-700 pt-4 mt-2 space-y-2">
+                  <Link
+                    href="/encrypt"
+                    className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+                  >
+                    <ArrowUpTrayIcon className="h-5 w-5" />
+                    업로드
+                  </Link>
+                  <Link
+                    href="/decrypt"
+                    className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+                  >
+                    <DocumentMagnifyingGlassIcon className="h-5 w-5" />
+                    원본 저작자 확인
+                  </Link>
+                </div>
               </>
             ) : (
               <>
@@ -119,6 +115,14 @@ export default function Header() {
           </>
         )}
       </nav>
+      {user && (
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-3 py-2 m-4 rounded-md text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-white transition-colors"
+        >
+          로그아웃
+        </button>
+      )}
       <footer className="p-4 border-t border-gray-700">
         <p className="text-xs text-gray-500 text-center">
           &copy; 2024 DDW. All rights reserved.

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, FormEvent, useEffect } from 'react'
+import { useState, FormEvent, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -11,8 +11,23 @@ export default function EncryptPage() {
   const [content, setContent] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const { token } = useAuth()
+  const { user, token, isLoading: authIsLoading } = useAuth()
   const router = useRouter()
+
+  useEffect(() => {
+    if (!authIsLoading && !user) {
+      alert('로그인이 필요한 서비스입니다.')
+      router.push('/login')
+    }
+  }, [user, authIsLoading, router])
+
+  if (authIsLoading || !user) {
+    return (
+      <p className="text-center mt-10 text-gray-400">
+        사용자 정보를 확인하는 중...
+      </p>
+    )
+  }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {

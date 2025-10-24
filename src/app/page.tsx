@@ -55,7 +55,7 @@ export default function HomePage() {
           Dynamic Digital Watermarking
         </h1>
         <p className="mt-4 max-w-2xl mx-auto text-gray-300">
-          당신의 소중한 영상 콘텐츠를 보호하세요. 육안으로 식별 불가능한
+          당신의 소중한 저작물 콘텐츠를 보호하세요. 육안으로 식별 불가능한
           워터마크로 유출자를 정확히 추적하고, 콘텐츠의 가치를 지킵니다.
         </p>
         <div className="mt-8">
@@ -63,7 +63,7 @@ export default function HomePage() {
             href="/encrypt"
             className="inline-block bg-purple-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors"
           >
-            지금 영상 업로드
+            업로드
           </Link>
         </div>
       </div>
