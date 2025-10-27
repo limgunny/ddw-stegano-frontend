@@ -16,19 +16,19 @@ const features = [
   {
     name: '정확한 유출자 추적',
     description:
-      '영상마다 고유한 사용자 정보가 삽입되어, 유출 발생 시 어떤 사용자의 영상인지 100% 정확하게 식별할 수 있습니다.',
+      '이미지마다 고유한 사용자 정보가 삽입되어, 유출 발생 시 어떤 사용자의 이미지인지 100% 정확하게 식별할 수 있습니다.',
     icon: FingerPrintIcon,
   },
   {
     name: '원본 화질 보존',
     description:
-      '무손실 압축 코덱(Lossless Codec)을 사용하여 워터마크를 삽입하므로, 원본 영상의 화질 저하가 전혀 없습니다.',
+      '무손실 압축 코덱(Lossless Codec)을 사용하여 워터마크를 삽입하므로, 원본 이미지의 화질 저하가 전혀 없습니다.',
     icon: SparklesIcon,
   },
   {
     name: '간편한 사용법',
     description:
-      '복잡한 과정 없이 영상을 업로드하기만 하면, 모든 워터마킹 과정이 자동으로 처리되는 직관적인 시스템을 제공합니다.',
+      '복잡한 과정 없이 이미지를 업로드하기만 하면, 모든 워터마킹 과정이 자동으로 처리되는 직관적인 시스템을 제공합니다.',
     icon: CursorArrowRaysIcon,
   },
 ]
@@ -36,21 +36,21 @@ const features = [
 const steps = [
   {
     id: '01',
-    name: '영상 업로드',
+    name: '이미지 업로드',
     description:
-      '보호하고 싶은 원본 영상을 업로드합니다. 회원가입 후 누구나 쉽게 이용할 수 있습니다.',
+      '보호하고 싶은 원본 이미지를 업로드합니다. 회원가입 후 누구나 쉽게 이용할 수 있습니다.',
   },
   {
     id: '02',
     name: '자동 워터마킹',
     description:
-      '시스템이 자동으로 당신의 고유 정보를 암호화하여 비가시성 워터마크로 영상에 삽입합니다.',
+      '시스템이 자동으로 당신의 고유 정보를 암호화하여 비가시성 워터마크로 이미지에 삽입합니다.',
   },
   {
     id: '03',
     name: '유출자 추적',
     description:
-      "외부에 유출된 영상을 발견하면, 'Decrypt' 페이지에 업로드하여 누가 유출했는지 즉시 확인하세요.",
+      "외부에 유출된 이미지를 발견하면, 'Decrypt' 페이지에 업로드하여 누가 유출했는지 즉시 확인하세요.",
   },
 ]
 
@@ -62,7 +62,7 @@ export default function AboutPage() {
           Dynamic Digital Watermarking
         </h1>
         <p className="mt-4 max-w-2xl mx-auto text-gray-300">
-          당신의 소중한 영상 콘텐츠를 보호하세요. 육안으로 식별 불가능한
+          당신의 소중한 이미지 콘텐츠를 보호하세요. 육안으로 식별 불가능한
           워터마크로 유출자를 정확히 추적하고, 콘텐츠의 가치를 지킵니다.
         </p>
         <div className="mt-8">
@@ -70,7 +70,7 @@ export default function AboutPage() {
             href="/encrypt"
             className="inline-block bg-purple-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors"
           >
-            지금 영상 업로드
+            지금 이미지 업로드
           </Link>
         </div>
       </div>
