@@ -49,7 +49,13 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Sidebar() {
+export default function Sidebar({
+  isSidebarOpen,
+  setSidebarOpen,
+}: {
+  isSidebarOpen: boolean
+  setSidebarOpen: (isOpen: boolean) => void
+}) {
   const { user, logout, isLoading, token } = useAuth()
   const pathname = usePathname()
   const router = useRouter()
@@ -112,41 +118,39 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 w-64 fixed top-0 bottom-0 border-r border-gray-700">
-      <div className="flex h-16 shrink-0 items-center">
-        <Link
-          href="/"
-          className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-sky-400"
-        >
-          DDW
-        </Link>
-      </div>
-      <nav className="flex flex-1 flex-col">
-        <ul role="list" className="flex flex-1 flex-col gap-y-5">
-          <li>
-            <ul role="list" className="-mx-2 space-y-1">
-              {mainNav.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className={classNames(
-                      pathname === item.href
-                        ? 'bg-gray-800 text-white'
-                        : 'text-gray-400 hover:text-white hover:bg-gray-800',
-                      'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                    )}
-                  >
-                    <item.icon className="h-6 w-6 shrink-0" />
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </li>
-          {user && (
+    <>
+      {/* Mobile backdrop (appears when sidebar is open on small screens) */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-gray-900/80 z-40 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        ></div>
+      )}
+
+      {/* Sidebar content */}
+      <div
+        className={classNames(
+          'flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 w-64 border-r border-gray-700',
+          'fixed top-0 bottom-0 z-50 transform transition-transform ease-in-out duration-300',
+          'hidden md:flex', // Hidden by default on mobile, flex on medium screens and up
+          isSidebarOpen ? 'block translate-x-0' : '-translate-x-full', // Mobile: slides in/out
+          'md:translate-x-0' // Desktop: always in place
+        )}
+      >
+        <div className="flex h-16 shrink-0 items-center">
+          <Link
+            href="/"
+            className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-sky-400"
+          >
+            DDW
+          </Link>
+        </div>
+
+        <nav className="flex flex-1 flex-col">
+          <ul role="list" className="flex flex-1 flex-col gap-y-5">
             <li>
               <ul role="list" className="-mx-2 space-y-1">
-                {userNav.map((item) => (
+                {mainNav.map((item) => (
                   <li key={item.name}>
                     <Link
                       href={item.href}
@@ -164,107 +168,129 @@ export default function Sidebar() {
                 ))}
               </ul>
             </li>
-          )}
-          <li>
-            <div className="text-xs font-semibold leading-6 text-gray-400">
-              카테고리
-            </div>
-            <ul role="list" className="-mx-2 mt-2 space-y-1">
-              {categories.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className={classNames(
-                      decodeURIComponent(pathname) === item.href
-                        ? 'bg-gray-800 text-white'
-                        : 'text-gray-400 hover:text-white hover:bg-gray-800',
-                      'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                    )}
-                  >
-                    <item.icon className="h-6 w-6 shrink-0" />
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </li>
-          <li className="mt-auto" ref={menuRef}>
-            {isLoading ? (
-              <div className="text-gray-400 text-sm p-2">로딩 중...</div>
-            ) : user ? (
-              <div className="group relative">
-                <button
-                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="w-full flex items-center justify-between gap-x-3 p-2 text-sm font-semibold leading-6 text-gray-300 rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                >
-                  <UserCircleIcon className="h-6 w-6" />
-                  <span className="truncate">{user.email}</span>
-                  <ChevronUpIcon
-                    className={`h-5 w-5 shrink-0 transition-transform ${
-                      isUserMenuOpen ? 'rotate-0' : 'rotate-180'
-                    }`}
-                  />
-                </button>
-                <div
-                  className={`absolute bottom-full mb-2 w-full bg-gray-800 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 z-10 transition-all duration-200 ease-in-out ${
-                    isUserMenuOpen
-                      ? 'opacity-100 visible translate-y-0'
-                      : 'opacity-0 invisible -translate-y-2'
-                  }`}
-                >
-                  {user.role === 'admin' && (
-                    <Link
-                      href="/admin"
-                      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-700/50"
-                    >
-                      <Cog6ToothIcon className="h-5 w-5" />
-                      관리자
-                    </Link>
-                  )}
-                  <Link
-                    href="/my-posts"
-                    className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700/50"
-                  >
-                    내 게시물
-                  </Link>
-                  <button
-                    onClick={handleWithdraw}
-                    className="w-full text-left block px-4 py-2 text-sm text-red-400 hover:bg-red-900/40"
-                  >
-                    회원탈퇴
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-1">
-                <Link
-                  href="/login"
-                  className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-400 hover:text-white hover:bg-gray-800"
-                >
-                  <ArrowLeftOnRectangleIcon className="h-6 w-6 shrink-0" />
-                  로그인
-                </Link>
-                <Link
-                  href="/signup"
-                  className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-400 hover:text-white hover:bg-gray-800"
-                >
-                  <UserPlusIcon className="h-6 w-6 shrink-0" />
-                  회원가입
-                </Link>
-              </div>
-            )}
             {user && (
-              <button
-                onClick={handleLogout}
-                className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-400 hover:text-white hover:bg-gray-800 w-full"
-              >
-                <ArrowRightOnRectangleIcon className="h-6 w-6 shrink-0" />
-                로그아웃
-              </button>
+              <li>
+                <ul role="list" className="-mx-2 space-y-1">
+                  {userNav.map((item) => (
+                    <li key={item.name}>
+                      <Link
+                        href={item.href}
+                        className={classNames(
+                          pathname === item.href
+                            ? 'bg-gray-800 text-white'
+                            : 'text-gray-400 hover:text-white hover:bg-gray-800',
+                          'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                        )}
+                      >
+                        <item.icon className="h-6 w-6 shrink-0" />
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </li>
             )}
-          </li>
-        </ul>
-      </nav>
-    </div>
+            <li>
+              <div className="text-xs font-semibold leading-6 text-gray-400">
+                카테고리
+              </div>
+              <ul role="list" className="-mx-2 mt-2 space-y-1">
+                {categories.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      className={classNames(
+                        decodeURIComponent(pathname) === item.href
+                          ? 'bg-gray-800 text-white'
+                          : 'text-gray-400 hover:text-white hover:bg-gray-800',
+                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                      )}
+                    >
+                      <item.icon className="h-6 w-6 shrink-0" />
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            <li className="mt-auto" ref={menuRef}>
+              {isLoading ? (
+                <div className="text-gray-400 text-sm p-2">로딩 중...</div>
+              ) : user ? (
+                <div className="group relative">
+                  <button
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                    className="w-full flex items-center justify-between gap-x-3 p-2 text-sm font-semibold leading-6 text-gray-300 rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  >
+                    <UserCircleIcon className="h-6 w-6" />
+                    <span className="truncate">{user.email}</span>
+                    <ChevronUpIcon
+                      className={`h-5 w-5 shrink-0 transition-transform ${
+                        isUserMenuOpen ? 'rotate-0' : 'rotate-180'
+                      }`}
+                    />
+                  </button>
+                  <div
+                    className={`absolute bottom-full mb-2 w-full bg-gray-800 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 z-10 transition-all duration-200 ease-in-out ${
+                      isUserMenuOpen
+                        ? 'opacity-100 visible translate-y-0'
+                        : 'opacity-0 invisible -translate-y-2'
+                    }`}
+                  >
+                    {user.role === 'admin' && (
+                      <Link
+                        href="/admin"
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-700/50"
+                      >
+                        <Cog6ToothIcon className="h-5 w-5" />
+                        관리자
+                      </Link>
+                    )}
+                    <Link
+                      href="/my-posts"
+                      className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700/50"
+                    >
+                      내 게시물
+                    </Link>
+                    <button
+                      onClick={handleWithdraw}
+                      className="w-full text-left block px-4 py-2 text-sm text-red-400 hover:bg-red-900/40"
+                    >
+                      회원탈퇴
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  <Link
+                    href="/login"
+                    className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-400 hover:text-white hover:bg-gray-800"
+                  >
+                    <ArrowLeftOnRectangleIcon className="h-6 w-6 shrink-0" />
+                    로그인
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-400 hover:text-white hover:bg-gray-800"
+                  >
+                    <UserPlusIcon className="h-6 w-6 shrink-0" />
+                    회원가입
+                  </Link>
+                </div>
+              )}
+              {user && (
+                <button
+                  onClick={handleLogout}
+                  className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-400 hover:text-white hover:bg-gray-800 w-full"
+                >
+                  <ArrowRightOnRectangleIcon className="h-6 w-6 shrink-0" />
+                  로그아웃
+                </button>
+              )}
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </>
   )
 }
