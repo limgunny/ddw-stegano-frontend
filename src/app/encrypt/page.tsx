@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, FormEvent, useEffect } from 'react'
+import { useState, FormEvent, useEffect, Suspense } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-export default function EncryptPage() {
+// useSearchParams를 사용하는 로직을 별도의 컴포넌트로 분리합니다.
+function EncryptForm() {
   const { user, token, isLoading: authIsLoading } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -183,5 +184,20 @@ export default function EncryptPage() {
         </form>
       </div>
     </div>
+  )
+}
+
+// 페이지 컴포넌트는 Suspense로 EncryptForm을 감싸줍니다.
+export default function EncryptPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="text-center mt-10 text-gray-400">
+          페이지를 불러오는 중...
+        </div>
+      }
+    >
+      <EncryptForm />
+    </Suspense>
   )
 }
