@@ -55,8 +55,12 @@ export default function EncryptPage() {
 
       alert('게시물이 성공적으로 업로드되었습니다.')
       router.push('/')
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError('알 수 없는 오류가 발생했습니다.')
+      }
     } finally {
       setIsLoading(false)
     }

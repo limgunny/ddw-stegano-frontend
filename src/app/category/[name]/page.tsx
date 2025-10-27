@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import PostCard from '@/components/PostCard'
+
 interface Post {
   _id: string
   title: string
@@ -12,17 +12,16 @@ interface Post {
   createdAt: string
   views: number
   likes: number
-  category: string
 }
 
 export default function CategoryPage() {
   const params = useParams()
-  const categoryName = decodeURIComponent(params.name as string)
-
+  const categoryName = params.name
+    ? decodeURIComponent(params.name as string)
+    : ''
   const [posts, setPosts] = useState<Post[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [sortOrder, setSortOrder] = useState('createdAt')
 
   useEffect(() => {
     if (!categoryName) return
@@ -31,7 +30,7 @@ export default function CategoryPage() {
       setIsLoading(true)
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/posts?category=${categoryName}&sort=${sortOrder}`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/posts?category=${categoryName}`
         )
         if (!response.ok) {
           throw new Error('게시물을 불러오는데 실패했습니다.')
@@ -50,56 +49,31 @@ export default function CategoryPage() {
     }
 
     fetchPosts()
-  }, [categoryName, sortOrder])
+  }, [categoryName])
 
-  const sortOptions = [
-    { key: 'createdAt', label: '최신순' },
-    { key: 'views', label: '조회수순' },
-    { key: 'likes', label: '추천순' },
-  ]
-
-  const getSortButtonClass = (key: string) =>
-    `px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-      sortOrder === key
-        ? 'bg-purple-600 text-white'
-        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-    }`
+  if (isLoading)
+    return (
+      <p className="text-center mt-10 text-gray-400">
+        {categoryName} 게시물을 불러오는 중...
+      </p>
+    )
+  if (error) return <p className="text-center mt-10 text-red-500">{error}</p>
 
   return (
     <div className="container mx-auto p-4 sm:p-6 lg:p-8">
-      <h1 className="text-3xl font-bold text-white mb-2">{categoryName}</h1>
-      <p className="text-gray-400 mb-8">
-        {categoryName} 카테고리의 게시물 목록입니다.
-      </p>
-
-      <div className="flex justify-end items-center mb-6 px-2">
-        <div className="flex items-center gap-2 p-1 bg-gray-900/50 rounded-lg">
-          {sortOptions.map((option) => (
-            <button
-              key={option.key}
-              onClick={() => setSortOrder(option.key)}
-              className={getSortButtonClass(option.key)}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {isLoading ? (
-        <p className="text-center mt-10">게시물을 불러오는 중...</p>
-      ) : error ? (
-        <p className="text-center mt-10 text-red-500">{error}</p>
-      ) : posts.length === 0 ? (
-        <p className="text-center mt-10 text-gray-400">
-          해당 카테고리에 게시물이 없습니다.
-        </p>
-      ) : (
+      <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-center text-white">
+        카테고리: {categoryName}
+      </h1>
+      {posts.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {posts.map((post) => (
             <PostCard key={post._id} post={post} />
           ))}
         </div>
+      ) : (
+        <p className="text-center text-gray-400">
+          이 카테고리에는 아직 게시물이 없습니다.
+        </p>
       )}
     </div>
   )
