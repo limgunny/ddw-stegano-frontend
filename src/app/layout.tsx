@@ -1,28 +1,37 @@
-import type { Metadata } from 'next'
+'use client'
+
+import { useState } from 'react'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import Sidebar from '@/components/Sidebar'
 import { AuthProvider } from '@/contexts/AuthContext'
+import Sidebar from '@/components/Sidebar'
+import Header from '@/components/Header'
 
 const inter = Inter({ subsets: ['latin'] })
-
-export const metadata: Metadata = {
-  title: 'DDW - Digital Watermarking',
-  description: 'Image watermarking using DCT',
-}
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const [isSidebarOpen, setSidebarOpen] = useState(false)
+
   return (
-    <html lang="ko" className="h-full bg-gray-900">
-      <body className={`${inter.className} h-full`}>
+    <html lang="ko">
+      <body className={`${inter.className} bg-gray-900`}>
         <AuthProvider>
-          <div className="flex h-full">
-            <Sidebar />
-            <main className="flex-grow pl-64 overflow-y-auto">{children}</main>
+          <div className="min-h-screen">
+            <Sidebar
+              isSidebarOpen={isSidebarOpen}
+              setSidebarOpen={setSidebarOpen}
+            />
+            <div className="md:pl-64 flex flex-col flex-1">
+              <Header
+                isSidebarOpen={isSidebarOpen}
+                setSidebarOpen={setSidebarOpen}
+              />
+              <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+            </div>
           </div>
         </AuthProvider>
       </body>
