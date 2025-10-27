@@ -55,21 +55,25 @@ export default function HomePage() {
   const getSortButtonClass = (key: string) =>
     `px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
       sortOrder === key
-        ? 'bg-purple-600 text-white'
-        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+        ? 'bg-purple-600 text-white shadow-md'
+        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
     }`
 
   if (isLoading)
-    return <p className="text-center mt-10">게시물을 불러오는 중...</p>
+    return (
+      <p className="text-center mt-10 text-gray-500 dark:text-gray-400">
+        게시물을 불러오는 중...
+      </p>
+    )
   if (error) return <p className="text-center mt-10 text-red-500">{error}</p>
 
   return (
     <div className="container mx-auto">
-      <div className="text-center p-8 sm:p-12 bg-gray-800/50 rounded-xl m-4 sm:m-6 lg:m-8 border border-gray-700">
+      <div className="text-center p-8 sm:p-12 bg-gray-50 dark:bg-gray-800/50 rounded-xl m-4 sm:m-6 lg:m-8 border border-gray-200 dark:border-gray-800">
         <h1 className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-sky-400">
           Dynamic Digital Watermarking
         </h1>
-        <p className="mt-4 max-w-2xl mx-auto text-gray-300">
+        <p className="mt-4 max-w-2xl mx-auto text-gray-600 dark:text-gray-300">
           당신의 소중한 저작물 콘텐츠를 보호하세요. 육안으로 식별 불가능한
           워터마크로 유출자를 정확히 추적하고, 콘텐츠의 가치를 지킵니다.
         </p>
@@ -85,7 +89,7 @@ export default function HomePage() {
 
       <div className="p-4 sm:p-6 lg:p-8 pt-0">
         <div className="flex justify-end items-center mb-6 px-2">
-          <div className="flex items-center gap-2 p-1 bg-gray-900/50 rounded-lg">
+          <div className="flex items-center gap-2 p-1 bg-gray-100 dark:bg-gray-800/50 rounded-lg">
             {sortOptions.map((option) => (
               <button
                 key={option.key}
@@ -103,7 +107,7 @@ export default function HomePage() {
               <Link
                 href={`/posts/${post._id}`}
                 key={post._id}
-                className="group block bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden transform hover:-translate-y-1 border border-transparent hover:border-purple-500"
+                className="group block bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden transform hover:-translate-y-1 border border-gray-200 dark:border-gray-700 hover:border-purple-500 dark:hover:border-purple-500"
               >
                 <div className="relative">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -113,15 +117,15 @@ export default function HomePage() {
                     className="w-full h-48 object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <h2 className="absolute bottom-2 left-4 text-lg font-semibold text-white truncate w-11/12">
+                  <h2 className="absolute bottom-2 left-4 text-lg font-semibold text-white truncate w-11/12 group-hover:text-purple-300 transition-colors">
                     {post.title}
                   </h2>
                 </div>
-                <div className="p-4 bg-gray-800">
-                  <p className="text-xs text-gray-400 truncate">
+                <div className="p-4">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                     by {post.authorEmail}
                   </p>
-                  <div className="flex justify-between items-center mt-2 text-xs text-gray-300">
+                  <div className="flex justify-between items-center mt-2 text-xs text-gray-500 dark:text-gray-400">
                     <span className="font-medium">
                       {new Date(post.createdAt).toLocaleDateString()}
                     </span>

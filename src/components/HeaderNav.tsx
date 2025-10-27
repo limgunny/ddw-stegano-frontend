@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
@@ -9,7 +9,23 @@ export default function HeaderNav() {
   const { user, logout, isLoading, token } = useAuth()
   const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false)
+      }
+    }
+
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isMenuOpen])
   const handleLogout = () => {
     if (window.confirm('정말 로그아웃 하시겠습니까?')) {
       logout()
@@ -46,47 +62,34 @@ export default function HeaderNav() {
     <nav className="hidden md:flex items-center space-x-4">
       {!isLoading && (
         <>
-          <Link
-            href="/encrypt"
-            className="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors"
-          >
-            Encrypt
-          </Link>
-          <Link
-            href="/decrypt"
-            className="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors"
-          >
-            Decrypt
-          </Link>
           {user ? (
             <>
-              <div
-                className="relative"
-                onMouseEnter={() => setIsMenuOpen(true)}
-                onMouseLeave={() => setIsMenuOpen(false)}
-              >
-                <span className="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900 cursor-pointer transition-colors">
+              <div className="relative" ref={menuRef}>
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-800 cursor-pointer transition-colors"
+                >
                   {user.email}님
-                </span>
+                </button>
                 {isMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 ring-1 ring-black ring-opacity-5">
+                  <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg py-1 z-20 ring-1 ring-black ring-opacity-5">
                     {user.role === 'admin' && (
                       <Link
                         href="/admin"
-                        className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                        className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
                       >
                         관리자 페이지
                       </Link>
                     )}
                     <Link
                       href="/my-posts"
-                      className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                      className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
                     >
                       게시글 모아보기
                     </Link>
                     <button
                       onClick={handleWithdraw}
-                      className="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                      className="w-full text-left block px-4 py-2 text-sm text-red-400 hover:bg-red-900/40"
                     >
                       회원탈퇴
                     </button>
@@ -95,7 +98,7 @@ export default function HeaderNav() {
               </div>
               <button
                 onClick={handleLogout}
-                className="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+                className="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-800 transition-colors"
               >
                 Logout
               </button>
@@ -104,13 +107,13 @@ export default function HeaderNav() {
             <>
               <Link
                 href="/signup"
-                className="px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+                className="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-800 transition-colors"
               >
                 Sign Up
               </Link>
               <Link
                 href="/login"
-                className="px-3 py-2 rounded-md text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 transition-colors"
+                className="px-3 py-2 rounded-md text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 transition-colors"
               >
                 Login
               </Link>

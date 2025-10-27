@@ -4,14 +4,12 @@ import { Bars3Icon } from '@heroicons/react/24/solid'
 import HeaderNav from './HeaderNav'
 
 export default function Header({
-  isSidebarOpen,
   setSidebarOpen,
 }: {
-  isSidebarOpen: boolean
   setSidebarOpen: (isOpen: boolean) => void
 }) {
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-700 bg-gray-900/50 px-4 backdrop-blur-sm sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-700 bg-gray-900/80 px-4 backdrop-blur-sm sm:px-6 lg:px-8">
       {/* Mobile menu button */}
       <div className="md:hidden">
         <button
@@ -25,12 +23,15 @@ export default function Header({
       </div>
       {/* Mobile Logo */}
       <div className="md:hidden">
-        <Link href="/" className="text-xl font-bold text-white">
+        <Link
+          href="/"
+          className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-sky-400"
+        >
           DDW
         </Link>
       </div>
       {/* Desktop Navigation */}
-      <div className="hidden md:flex flex-1 justify-end">
+      <div className="hidden md:flex flex-1 items-center justify-end">
         <HeaderNav />
       </div>
     </header>

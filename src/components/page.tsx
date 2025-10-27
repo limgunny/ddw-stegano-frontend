@@ -55,8 +55,8 @@ export default function MyPostsPage() {
   }
 
   return (
-    <div className="container mx-auto p-8">
-      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
+    <div className="container mx-auto p-4 sm:p-6 lg:p-8">
+      <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-center text-gray-800 dark:text-white">
         내 게시물
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -65,7 +65,7 @@ export default function MyPostsPage() {
             <Link
               key={post._id}
               href={`/posts/${post._id}`}
-              className="group block bg-white rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105"
+              className="group block bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-gray-200 dark:border-gray-700"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -73,15 +73,15 @@ export default function MyPostsPage() {
                 alt={post.title}
                 className="w-full h-48 object-cover"
               />
-              <div className="p-4">
-                <h2 className="text-lg font-semibold text-gray-800 truncate group-hover:text-blue-600">
+              <div className="p-4 bg-white dark:bg-gray-800">
+                <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 truncate group-hover:text-purple-600 dark:group-hover:text-purple-400">
                   {post.title}
                 </h2>
               </div>
             </Link>
           ))
         ) : (
-          <p className="col-span-full text-center text-gray-500">
+          <p className="col-span-full text-center text-gray-500 dark:text-gray-400">
             작성한 게시물이 없습니다.
           </p>
         )}
