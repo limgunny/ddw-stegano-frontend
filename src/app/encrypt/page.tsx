@@ -5,14 +5,17 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 
 export default function EncryptPage() {
-  const [image, setImage] = useState<File | null>(null)
-  const [imagePreview, setImagePreview] = useState<string | null>(null)
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const { user, token, isLoading: authIsLoading } = useAuth()
   const router = useRouter()
+  const [file, setFile] = useState<File | null>(null)
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
+  const [category, setCategory] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [preview, setPreview] = useState<string | null>(null)
+
+  const categories = ['사진', '일러스트', '자연', '동물', '일상', '기타']
 
   useEffect(() => {
     if (!authIsLoading && !user) {
@@ -30,18 +33,18 @@ export default function EncryptPage() {
   }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0]
-      setImage(file)
-      setImagePreview(URL.createObjectURL(file))
+    const selectedFile = e.target.files?.[0]
+    if (selectedFile) {
+      setFile(selectedFile)
+      setPreview(URL.createObjectURL(selectedFile))
       setError(null)
     }
   }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    if (!image || !title || !content) {
-      setError('이미지, 제목, 내용을 모두 입력해주세요.')
+    if (!file || !title || !content || !category) {
+      setError('이미지, 제목, 내용, 카테고리를 모두 입력해주세요.')
       return
     }
 
@@ -49,9 +52,10 @@ export default function EncryptPage() {
     setError(null)
 
     const formData = new FormData()
-    formData.append('image', image) // The File object
+    formData.append('image', file)
     formData.append('title', title)
     formData.append('content', content)
+    formData.append('category', category)
 
     try {
       const response = await fetch(
@@ -107,20 +111,21 @@ export default function EncryptPage() {
             onChange={handleImageChange}
             className="block w-full text-sm text-gray-300 border border-gray-600 rounded-lg cursor-pointer bg-gray-700 focus:outline-none placeholder-gray-400"
           />
-          {imagePreview && (
+          {preview && (
             <div className="mt-4">
               <p className="text-sm font-medium text-gray-300 mb-2">
                 이미지 미리보기:
               </p>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={imagePreview}
+                src={preview}
                 alt="Image preview"
                 className="max-h-48 rounded-lg shadow-sm"
               />
             </div>
           )}
         </div>
+
         <div className="mb-6">
           <label
             htmlFor="title"
@@ -133,10 +138,35 @@ export default function EncryptPage() {
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="block p-2.5 w-full text-sm text-white bg-gray-700 rounded-lg border border-gray-600 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+            className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
             placeholder="게시물 제목을 입력하세요"
+            required
           />
         </div>
+
+        <div className="mb-6">
+          <label
+            htmlFor="category"
+            className="block mb-2 text-sm font-medium text-gray-300"
+          >
+            카테고리
+          </label>
+          <select
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
+            required
+          >
+            <option value="">카테고리를 선택하세요</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div className="mb-6">
           <label
             htmlFor="content"
@@ -149,13 +179,14 @@ export default function EncryptPage() {
             rows={6}
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="block p-2.5 w-full text-sm text-white bg-gray-700 rounded-lg border border-gray-600 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+            className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
             placeholder="게시물 내용을 입력하세요"
+            required
           ></textarea>
         </div>
         <button
           type="submit"
-          disabled={isLoading || !image || !title || !content}
+          disabled={isLoading || !file || !title || !content || !category}
           className="w-full text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-sky-500"
         >
           {isLoading ? '업로드 중...' : '게시물 생성'}
