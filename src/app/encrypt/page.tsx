@@ -63,7 +63,6 @@ export default function EncryptPage() {
         {
           method: 'POST',
           headers: {
-            // The backend's @token_required decorator needs this
             Authorization: `Bearer ${token}`,
           },
           body: formData,
