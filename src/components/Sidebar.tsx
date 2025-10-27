@@ -13,12 +13,14 @@ import {
   ArrowRightOnRectangleIcon,
   UserPlusIcon,
   ArrowLeftOnRectangleIcon,
-  PhotoIcon,
   PaintBrushIcon,
   SunIcon,
   SparklesIcon,
   EllipsisHorizontalCircleIcon,
+  ChevronUpIcon,
+  AcademicCapIcon,
 } from '@heroicons/react/24/outline'
+import { useState, useEffect, useRef } from 'react'
 
 const mainNav = [
   { name: '홈', href: '/', icon: HomeIcon },
@@ -35,11 +37,11 @@ const userNav = [
 ]
 
 const categories = [
-  { name: '사진', href: '/category/사진', icon: PhotoIcon },
+  { name: '학습', href: '/category/학습', icon: AcademicCapIcon },
   { name: '일러스트', href: '/category/일러스트', icon: PaintBrushIcon },
   { name: '자연', href: '/category/자연', icon: SunIcon },
   { name: '동물', href: '/category/동물', icon: SparklesIcon },
-  { name: '일상', href: '/category/일상', icon: UserCircleIcon }, // Changed icon to avoid duplication
+  { name: '일상', href: '/category/일상', icon: UserCircleIcon },
   { name: '기타', href: '/category/기타', icon: EllipsisHorizontalCircleIcon },
 ]
 
@@ -51,6 +53,26 @@ export default function Sidebar() {
   const { user, logout, isLoading, token } = useAuth()
   const pathname = usePathname()
   const router = useRouter()
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLLIElement>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsUserMenuOpen(false)
+      }
+    }
+
+    if (isUserMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isUserMenuOpen])
 
   const handleLogout = () => {
     if (window.confirm('정말 로그아웃 하시겠습니까?')) {
@@ -166,20 +188,34 @@ export default function Sidebar() {
               ))}
             </ul>
           </li>
-          <li className="mt-auto">
+          <li className="mt-auto" ref={menuRef}>
             {isLoading ? (
               <div className="text-gray-400 text-sm p-2">로딩 중...</div>
             ) : user ? (
               <div className="group relative">
-                <div className="flex items-center gap-x-3 p-2 text-sm font-semibold leading-6 text-gray-300 rounded-md hover:bg-gray-800">
+                <button
+                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                  className="w-full flex items-center justify-between gap-x-3 p-2 text-sm font-semibold leading-6 text-gray-300 rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
                   <UserCircleIcon className="h-6 w-6" />
                   <span className="truncate">{user.email}</span>
-                </div>
-                <div className="absolute hidden group-hover:block bottom-full mb-2 w-full bg-gray-800 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 z-10">
+                  <ChevronUpIcon
+                    className={`h-5 w-5 shrink-0 transition-transform ${
+                      isUserMenuOpen ? 'rotate-0' : 'rotate-180'
+                    }`}
+                  />
+                </button>
+                <div
+                  className={`absolute bottom-full mb-2 w-full bg-gray-800 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 z-10 transition-all duration-200 ease-in-out ${
+                    isUserMenuOpen
+                      ? 'opacity-100 visible translate-y-0'
+                      : 'opacity-0 invisible -translate-y-2'
+                  }`}
+                >
                   {user.role === 'admin' && (
                     <Link
                       href="/admin"
-                      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
+                      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-700/50"
                     >
                       <Cog6ToothIcon className="h-5 w-5" />
                       관리자
@@ -187,13 +223,13 @@ export default function Sidebar() {
                   )}
                   <Link
                     href="/my-posts"
-                    className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
+                    className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700/50"
                   >
                     내 게시물
                   </Link>
                   <button
                     onClick={handleWithdraw}
-                    className="w-full text-left block px-4 py-2 text-sm text-red-400 hover:bg-red-900/50"
+                    className="w-full text-left block px-4 py-2 text-sm text-red-400 hover:bg-red-900/40"
                   >
                     회원탈퇴
                   </button>
