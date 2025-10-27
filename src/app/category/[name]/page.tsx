@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import PostCard from '@/components/PostCard'
+import CtaBanner from '@/components/CtaBanner'
 
 interface Post {
   _id: string
@@ -61,9 +62,10 @@ export default function CategoryPage() {
 
   return (
     <div className="container mx-auto p-4 sm:p-6 lg:p-8">
-      <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-center text-white">
-        카테고리: {categoryName}
-      </h1>
+      <CtaBanner category={categoryName} />
+      <h2 className="text-2xl sm:text-3xl font-bold mb-8 px-4 text-white">
+        {categoryName}
+      </h2>
       {posts.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {posts.map((post) => (

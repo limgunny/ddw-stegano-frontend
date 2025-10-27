@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, FormEvent } from 'react'
+import { useState, FormEvent, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function EncryptPage() {
   const { user, token, isLoading: authIsLoading } = useAuth()
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const [image, setImage] = useState<File | null>(null)
   const [title, setTitle] = useState('')
@@ -14,6 +15,13 @@ export default function EncryptPage() {
   const [category, setCategory] = useState('일상')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const categoryFromQuery = searchParams.get('category')
+    if (categoryFromQuery) {
+      setCategory(categoryFromQuery)
+    }
+  }, [searchParams])
 
   if (!authIsLoading && !user) {
     router.push('/login')
@@ -63,6 +71,21 @@ export default function EncryptPage() {
       }
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null
+    if (file) {
+      // 5MB 파일 크기 제한
+      if (file.size > 5 * 1024 * 1024) {
+        setError('이미지 파일 크기는 5MB를 초과할 수 없습니다.')
+        setImage(null)
+        e.target.value = '' // 파일 선택 초기화
+      } else {
+        setImage(file)
+        setError(null)
+      }
     }
   }
 
@@ -136,10 +159,8 @@ export default function EncryptPage() {
             <input
               type="file"
               id="image"
-              accept="image/png, image/jpeg"
-              onChange={(e) =>
-                setImage(e.target.files ? e.target.files[0] : null)
-              }
+              accept="image/jpeg, image/png"
+              onChange={handleImageChange}
               className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
               required
             />
