@@ -13,12 +13,12 @@ import {
   ArrowRightOnRectangleIcon,
   UserPlusIcon,
   ArrowLeftOnRectangleIcon,
+  PhotoIcon,
   PaintBrushIcon,
   SunIcon,
   SparklesIcon,
   EllipsisHorizontalCircleIcon,
   ChevronUpIcon,
-  AcademicCapIcon,
 } from '@heroicons/react/24/outline'
 import { useState, useEffect, useRef } from 'react'
 
@@ -37,11 +37,11 @@ const userNav = [
 ]
 
 const categories = [
-  { name: '학습', href: '/category/학습', icon: AcademicCapIcon },
+  { name: '사진', href: '/category/사진', icon: PhotoIcon },
   { name: '일러스트', href: '/category/일러스트', icon: PaintBrushIcon },
   { name: '자연', href: '/category/자연', icon: SunIcon },
   { name: '동물', href: '/category/동물', icon: SparklesIcon },
-  { name: '일상', href: '/category/일상', icon: UserCircleIcon },
+  { name: '일상', href: '/category/일상', icon: UserCircleIcon }, // Changed icon to avoid duplication
   { name: '기타', href: '/category/기타', icon: EllipsisHorizontalCircleIcon },
 ]
 

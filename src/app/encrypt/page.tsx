@@ -15,7 +15,7 @@ export default function EncryptPage() {
   const [error, setError] = useState<string | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
 
-  const categories = ['학습', '일러스트', '자연', '동물', '일상', '기타']
+  const categories = ['사진', '일러스트', '자연', '동물', '일상', '기타']
 
   useEffect(() => {
     if (!authIsLoading && !user) {
