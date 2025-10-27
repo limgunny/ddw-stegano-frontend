@@ -15,7 +15,7 @@ export default function EncryptPage() {
   const [error, setError] = useState<string | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
 
-  const categories = ['사진', '일러스트', '자연', '동물', '일상', '기타']
+  const categories = ['학습', '일러스트', '자연', '동물', '일상', '기타']
 
   useEffect(() => {
     if (!authIsLoading && !user) {
@@ -35,6 +35,13 @@ export default function EncryptPage() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
     if (selectedFile) {
+      if (selectedFile.size > 1 * 1024 * 1024) {
+        // 1MB
+        setError('이미지 파일 크기는 1MB를 초과할 수 없습니다.')
+        setFile(null)
+        setPreview(null)
+        return
+      }
       setFile(selectedFile)
       setPreview(URL.createObjectURL(selectedFile))
       setError(null)
