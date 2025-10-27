@@ -106,7 +106,7 @@ export default function EncryptPage() {
           <input
             type="file"
             id="image"
-            accept="image/png, image/jpeg"
+            accept="image/png, image/jpeg, .jpg, .jpeg, .JPG, .JPEG"
             onChange={handleImageChange}
             className="block w-full text-sm text-gray-300 border border-gray-600 rounded-lg cursor-pointer bg-gray-700 focus:outline-none placeholder-gray-400"
           />
