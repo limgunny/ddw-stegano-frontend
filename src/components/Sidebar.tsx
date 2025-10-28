@@ -16,7 +16,6 @@ import {
   SunIcon,
   SparklesIcon,
   EllipsisHorizontalCircleIcon,
-  ChatBubbleOvalLeftEllipsisIcon,
   ChevronUpIcon,
   AcademicCapIcon,
 } from '@heroicons/react/24/outline'
