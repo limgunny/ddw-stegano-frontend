@@ -22,7 +22,6 @@ import {
 } from '@heroicons/react/24/outline'
 import { useState, useEffect, useRef } from 'react'
 import { PaintBrushIcon } from '@heroicons/react/24/solid'
-import Chat from './Chat'
 
 const mainNav = [
   { name: '홈', href: '/', icon: HomeIcon },
@@ -54,15 +53,16 @@ function classNames(...classes: string[]) {
 export default function Sidebar({
   isSidebarOpen,
   setSidebarOpen,
+  setIsChatOpen,
 }: {
   isSidebarOpen: boolean
   setSidebarOpen: (isOpen: boolean) => void
+  setIsChatOpen: (isOpen: boolean) => void
 }) {
   const { user, logout, isLoading, token, fetchWithAuth } = useAuth()
   const pathname = usePathname()
   const router = useRouter()
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
-  const [isChatOpen, setIsChatOpen] = useState(false)
   const menuRef = useRef<HTMLLIElement>(null)
 
   useEffect(() => {
@@ -119,8 +119,6 @@ export default function Sidebar({
 
   return (
     <>
-      <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
-
       {/* Mobile backdrop (appears when sidebar is open on small screens) */}
       {isSidebarOpen && (
         <div

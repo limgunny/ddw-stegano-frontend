@@ -39,7 +39,7 @@ export default function PostPage() {
         })
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${id}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${id}`
         )
         if (!response.ok) {
           throw new Error('게시물을 불러오는데 실패했습니다.')
@@ -48,7 +48,7 @@ export default function PostPage() {
         setPost(data)
       } catch (err) {
         setError(
-          err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.',
+          err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.'
         )
       } finally {
         setIsLoading(false)
@@ -66,7 +66,7 @@ export default function PostPage() {
         `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${post._id}`,
         {
           method: 'DELETE',
-        },
+        }
       )
 
       if (!response.ok) {
@@ -91,7 +91,7 @@ export default function PostPage() {
     try {
       const response = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${post._id}/like`,
-        { method },
+        { method }
       )
       if (!response.ok) throw new Error('추천 처리에 실패했습니다.')
 
@@ -163,15 +163,16 @@ export default function PostPage() {
                 {post.views}
               </span>
             </div>
-            {user && (user.role === 'admin' || user.email === post.authorEmail) && (
-              <button
-                onClick={handleDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm font-semibold"
-              >
-                삭제
-              </button>
-            </div>
-          )}
+            {user &&
+              (user.role === 'admin' || user.email === post.authorEmail) && (
+                <button
+                  onClick={handleDelete}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm font-semibold"
+                >
+                  삭제
+                </button>
+              )}
+          </div>
           {/* 댓글 섹션 */}
           <CommentSection postId={post._id} />
         </div>
