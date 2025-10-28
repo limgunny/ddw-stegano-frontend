@@ -57,14 +57,12 @@ export default function HomePage() {
     `px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
       sortOrder === key
         ? 'bg-purple-600 text-white shadow-md'
-        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
     }`
 
   if (isLoading)
     return (
-      <p className="text-center mt-10 text-gray-500 dark:text-gray-400">
-        게시물을 불러오는 중...
-      </p>
+      <p className="text-center mt-10 text-gray-400">게시물을 불러오는 중...</p>
     )
   if (error) return <p className="text-center mt-10 text-red-500">{error}</p>
 
@@ -74,7 +72,7 @@ export default function HomePage() {
 
       <div className="p-4 sm:p-6 lg:p-8 pt-0">
         <div className="flex justify-end items-center mb-6 px-2">
-          <div className="flex items-center gap-2 p-1 bg-gray-100 dark:bg-gray-800/50 rounded-lg">
+          <div className="flex items-center gap-2 p-1 bg-gray-800/50 rounded-lg">
             {sortOptions.map((option) => (
               <button
                 key={option.key}
@@ -92,7 +90,7 @@ export default function HomePage() {
               <Link
                 href={`/posts/${post._id}`}
                 key={post._id}
-                className="group block bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden transform hover:-translate-y-1 border border-gray-200 dark:border-gray-700 hover:border-purple-500 dark:hover:border-purple-500"
+                className="group block bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden transform hover:-translate-y-1 border border-gray-700 hover:border-purple-500"
               >
                 <div className="relative">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -107,10 +105,10 @@ export default function HomePage() {
                   </h2>
                 </div>
                 <div className="p-4">
-                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                  <p className="text-xs text-gray-400 truncate">
                     by {post.authorEmail}
                   </p>
-                  <div className="flex justify-between items-center mt-2 text-xs text-gray-500 dark:text-gray-400">
+                  <div className="flex justify-between items-center mt-2 text-xs text-gray-400">
                     <span className="font-medium">
                       {new Date(post.createdAt).toLocaleDateString()}
                     </span>

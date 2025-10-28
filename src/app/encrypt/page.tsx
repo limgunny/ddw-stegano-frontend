@@ -176,6 +176,12 @@ function EncryptForm() {
             <p className="mt-1 text-sm text-gray-300">
               PNG, JPG 파일을 업로드하세요. (최대 5MB)
             </p>
+            <p className="mt-1 text-xs text-yellow-400/80">
+              <strong>주의:</strong> 스마트폰으로 촬영한 사진 등 메타데이터
+              포함된 이미지 업로드 시 워터마킹 및 업로드에 오류가 발생할 수
+              있습니다. <br />
+              메타데이터가 제거된 이미지를 업로드해 주세요
+            </p>
           </div>
           <button
             type="submit"
@@ -184,18 +190,7 @@ function EncryptForm() {
           >
             {isLoading ? '업로드 중...' : '게시물 생성'}
           </button>
-          {error && (
-            <p className="text-red-400 mt-4 text-center">
-              {error}
-              <br />
-              <span className="text-xs text-yellow-500">
-                <strong>실패:</strong> 스마트폰으로 촬영한 사진과 같이
-                메타데이터가 포함된 이미지는 업로드에 실패할 수 있습니다. 가급적
-                스크린샷을 이용하거나 메타데이터가 제거된 이미지를 업로드해
-                주세요.
-              </span>
-            </p>
-          )}
+          {error && <p className="text-red-400 mt-4 text-center">{error}</p>}
         </form>
       </div>
     </div>
