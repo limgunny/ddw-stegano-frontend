@@ -13,7 +13,7 @@ interface Post {
 }
 
 export default function MyPostsPage() {
-  const { user, token, isLoading: authIsLoading, fetchWithAuth } = useAuth()
+  const { user, isLoading: authIsLoading, fetchWithAuth } = useAuth()
   const router = useRouter()
   const [posts, setPosts] = useState<Post[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -24,7 +24,7 @@ export default function MyPostsPage() {
       return
     }
 
-    if (token) {
+    if (user) {
       const fetchPosts = async () => {
         try {
           const response = await fetchWithAuth(
@@ -43,7 +43,7 @@ export default function MyPostsPage() {
       }
       fetchPosts()
     }
-  }, [user, token, authIsLoading, router, fetchWithAuth])
+  }, [user, authIsLoading, router, fetchWithAuth])
 
   if (isLoading || authIsLoading) {
     return <p className="text-center mt-10">내 게시물을 불러오는 중...</p>
