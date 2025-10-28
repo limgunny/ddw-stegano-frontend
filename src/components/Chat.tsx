@@ -199,9 +199,11 @@ export default function Chat({ isOpen, onClose }: ChatProps) {
                 </h2>
               </div>
               <div className="flex-1 p-4 overflow-y-auto space-y-4">
-                {messages.map((msg, index) => (
+                {messages.map((msg) => (
                   <div
-                    key={index}
+                    // Use a unique key if available, otherwise fallback to a composite key
+                    // The backend now provides `_id` on new messages, so this should be reliable.
+                    key={msg._id || `${msg.sender}-${msg.createdAt}`}
                     className={`flex ${
                       msg.sender === user?.email
                         ? 'justify-end'
