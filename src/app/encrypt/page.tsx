@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 
 // useSearchParams를 사용하는 로직을 별도의 컴포넌트로 분리합니다.
 function EncryptForm() {
-  const { user, token, isLoading: authIsLoading } = useAuth()
+  const { user, token, isLoading: authIsLoading, fetchWithAuth } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -24,9 +24,16 @@ function EncryptForm() {
     }
   }, [searchParams])
 
-  if (!authIsLoading && !user) {
-    router.push('/login')
-    return null
+  useEffect(() => {
+    if (!authIsLoading && !user) {
+      router.push('/login')
+    }
+  }, [authIsLoading, user, router])
+
+  if (authIsLoading || !user) {
+    return (
+      <p className="text-center mt-10 text-gray-400">페이지를 불러오는 중...</p>
+    )
   }
 
   const handleSubmit = async (e: FormEvent) => {
@@ -46,15 +53,9 @@ function EncryptForm() {
     formData.append('category', category)
 
     try {
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_API_URL}/api/posts`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        }
+        { method: 'POST', body: formData }
       )
 
       const data = await response.json()

@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 
 export default function HeaderNav() {
-  const { user, logout, isLoading, token } = useAuth()
+  const { user, logout, isLoading, token, fetchWithAuth } = useAuth()
   const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -40,12 +40,9 @@ export default function HeaderNav() {
       )
     ) {
       try {
-        const response = await fetch(
+        const response = await fetchWithAuth(
           `${process.env.NEXT_PUBLIC_API_URL}/api/users/me`,
-          {
-            method: 'DELETE',
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          { method: 'DELETE' }
         )
         if (!response.ok) throw new Error('회원 탈퇴에 실패했습니다.')
 

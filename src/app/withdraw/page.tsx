@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 
 export default function WithdrawPage() {
-  const { token, logout } = useAuth()
+  const { token, logout, fetchWithAuth } = useAuth()
   const router = useRouter()
   const [confirmationText, setConfirmationText] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -22,12 +22,9 @@ export default function WithdrawPage() {
     setError(null)
 
     try {
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_API_URL}/api/users/me`,
-        {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { method: 'DELETE' }
       )
       const data = await response.json()
 

@@ -1,10 +1,25 @@
+'use client'
+
 import Link from 'next/link'
+import { useAuth } from '@/contexts/AuthContext'
+import { useRouter } from 'next/navigation'
 
 interface CtaBannerProps {
   category?: string
 }
 
 export default function CtaBanner({ category }: CtaBannerProps) {
+  const { user } = useAuth()
+  const router = useRouter()
+
+  const handleUploadClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!user) {
+      e.preventDefault()
+      alert('로그인이 필요합니다.')
+      router.push('/login')
+    }
+  }
+
   const uploadHref = category
     ? `/encrypt?category=${encodeURIComponent(category)}`
     : '/encrypt'
@@ -21,6 +36,7 @@ export default function CtaBanner({ category }: CtaBannerProps) {
       <div className="mt-8">
         <Link
           href={uploadHref}
+          onClick={handleUploadClick}
           className="inline-block bg-purple-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors"
         >
           업로드

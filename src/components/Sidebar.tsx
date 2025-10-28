@@ -56,7 +56,7 @@ export default function Sidebar({
   isSidebarOpen: boolean
   setSidebarOpen: (isOpen: boolean) => void
 }) {
-  const { user, logout, isLoading, token } = useAuth()
+  const { user, logout, isLoading, token, fetchWithAuth } = useAuth()
   const pathname = usePathname()
   const router = useRouter()
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
@@ -96,12 +96,9 @@ export default function Sidebar({
       return
     }
     try {
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_API_URL}/api/users/me`,
-        {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { method: 'DELETE' }
       )
       const data = await response.json()
       if (!response.ok)

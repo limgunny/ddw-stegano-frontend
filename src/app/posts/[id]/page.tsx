@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import Link from 'next/link'
@@ -21,11 +21,12 @@ interface Post {
 export default function PostPage() {
   const params = useParams()
   const router = useRouter()
-  const { user, token, isLoading: authLoading } = useAuth()
+  const { user, token, isLoading: authLoading, fetchWithAuth } = useAuth()
   const [post, setPost] = useState<Post | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [hasLiked, setHasLiked] = useState(false)
+  const viewCounted = useRef(false)
 
   const postId = params.id
 
@@ -33,13 +34,21 @@ export default function PostPage() {
     if (!postId) return
 
     const fetchPost = async () => {
-      try {
-        // 조회수 증가
-        await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}/view`,
-          { method: 'PUT' }
-        )
+      // 조회수 증가 로직을 useEffect 내에서 한 번만 실행되도록 수정
+      if (!viewCounted.current) {
+        try {
+          await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}/view`,
+            { method: 'PUT' }
+          )
+          viewCounted.current = true
+        } catch (err) {
+          // 조회수 증가 실패는 치명적인 오류가 아니므로 콘솔에만 기록
+          console.error('Failed to increase view count:', err)
+        }
+      }
 
+      try {
         // 게시물 정보 가져오기
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}`
@@ -65,8 +74,11 @@ export default function PostPage() {
 
   useEffect(() => {
     // 사용자의 '좋아요' 상태 확인 (예시: 로컬 스토리지 사용)
-    const likedPosts = JSON.parse(localStorage.getItem('likedPosts') || '[]')
-    if (user && likedPosts.includes(postId)) {
+    const likedPostsRaw = localStorage.getItem('likedPosts')
+    const likedPosts = likedPostsRaw ? JSON.parse(likedPostsRaw) : []
+
+    // likedPosts가 배열인지 확인
+    if (user && Array.isArray(likedPosts) && likedPosts.includes(postId)) {
       setHasLiked(true)
     }
   }, [postId, user])
@@ -80,14 +92,9 @@ export default function PostPage() {
 
     const method = hasLiked ? 'DELETE' : 'PUT'
     try {
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}/like`,
-        {
-          method,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { method }
       )
       if (!response.ok) {
         throw new Error('추천 처리에 실패했습니다.')
@@ -99,17 +106,20 @@ export default function PostPage() {
       setHasLiked(!hasLiked)
 
       // 로컬 스토리지에 '좋아요' 상태 저장
-      const likedPosts = JSON.parse(localStorage.getItem('likedPosts') || '[]')
+      const likedPostsRaw = localStorage.getItem('likedPosts')
+      let likedPosts = likedPostsRaw ? JSON.parse(likedPostsRaw) : []
+      if (!Array.isArray(likedPosts)) {
+        likedPosts = []
+      }
+
       if (hasLiked) {
         localStorage.setItem(
           'likedPosts',
           JSON.stringify(likedPosts.filter((id: string) => id !== postId))
         )
       } else {
-        localStorage.setItem(
-          'likedPosts',
-          JSON.stringify([...likedPosts, postId])
-        )
+        likedPosts.push(postId)
+        localStorage.setItem('likedPosts', JSON.stringify(likedPosts))
       }
     } catch (err) {
       if (err instanceof Error) {
@@ -122,14 +132,9 @@ export default function PostPage() {
     if (!window.confirm('정말 이 게시물을 삭제하시겠습니까?')) return
 
     try {
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { method: 'DELETE' }
       )
       if (!response.ok) {
         const data = await response.json()
@@ -205,7 +210,8 @@ export default function PostPage() {
             </div>
             {!authLoading &&
               user &&
-              (user.email === post.authorEmail || user.role === 'admin') && (
+              (user.role === 'admin' ||
+                (user.email === post.authorEmail && !post.isViolation)) && (
                 <button
                   onClick={handleDelete}
                   className="px-4 py-2 text-sm font-medium text-red-400 bg-red-900/50 rounded-md hover:bg-red-800/50 transition-colors"

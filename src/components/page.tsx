@@ -13,7 +13,7 @@ interface Post {
 }
 
 export default function MyPostsPage() {
-  const { user, token, isLoading: authIsLoading } = useAuth()
+  const { user, token, isLoading: authIsLoading, fetchWithAuth } = useAuth()
   const router = useRouter()
   const [posts, setPosts] = useState<Post[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -27,13 +27,8 @@ export default function MyPostsPage() {
     if (token) {
       const fetchPosts = async () => {
         try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/users/me/posts`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
+          const response = await fetchWithAuth(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/users/me/posts`
           )
           if (!response.ok) {
             throw new Error('게시물을 불러오는데 실패했습니다.')

@@ -20,6 +20,7 @@ interface AuthContextType {
   logout: () => void
   isLoading: boolean
   token: string | null
+  fetchWithAuth: (url: string, options?: RequestInit) => Promise<Response>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -57,8 +58,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(null)
   }
 
+  const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+    const headers = new Headers(options.headers)
+    if (token) {
+      headers.append('Authorization', `Bearer ${token}`)
+    }
+    options.headers = headers
+
+    const response = await fetch(url, options)
+
+    if (response.status === 401) {
+      // 토큰이 유효하지 않거나 만료된 경우 자동 로그아웃
+      logout()
+      // 로그인 페이지로 리디렉션하기 위해 에러를 다시 던집니다.
+      throw new Error('Unauthorized')
+    }
+
+    return response
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading, token }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, isLoading, token, fetchWithAuth }}
+    >
       {children}
     </AuthContext.Provider>
   )
