@@ -53,11 +53,9 @@ function classNames(...classes: string[]) {
 export default function Sidebar({
   isSidebarOpen,
   setSidebarOpen,
-  setIsChatOpen,
 }: {
   isSidebarOpen: boolean
   setSidebarOpen: (isOpen: boolean) => void
-  setIsChatOpen: (isOpen: boolean) => void
 }) {
   const { user, logout, isLoading, token, fetchWithAuth } = useAuth()
   const pathname = usePathname()
@@ -266,13 +264,6 @@ export default function Sidebar({
                         관리자
                       </Link>
                     )}
-                    <button
-                      onClick={() => setIsChatOpen(true)}
-                      className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
-                    >
-                      <ChatBubbleOvalLeftEllipsisIcon className="h-5 w-5" />
-                      채팅
-                    </button>
                     {user && (
                       <button
                         onClick={handleLogout}
