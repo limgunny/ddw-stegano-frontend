@@ -67,7 +67,14 @@ function EncryptForm() {
       router.push('/')
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setError(err.message)
+        // 네트워크 오류 (fetch 실패 등) 발생 시 사용자 친화적 메시지 표시
+        if (err.message.toLowerCase().includes('fetch')) {
+          setError(
+            '서버와 통신 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+          )
+        } else {
+          setError(err.message)
+        }
       } else {
         setError('알 수 없는 오류가 발생했습니다.')
       }
@@ -182,7 +189,7 @@ function EncryptForm() {
               {error}
               <br />
               <span className="text-xs text-yellow-500">
-                <strong>참고:</strong> 스마트폰으로 촬영한 사진과 같이
+                <strong>실패:</strong> 스마트폰으로 촬영한 사진과 같이
                 메타데이터가 포함된 이미지는 업로드에 실패할 수 있습니다. 가급적
                 스크린샷을 이용하거나 메타데이터가 제거된 이미지를 업로드해
                 주세요.
