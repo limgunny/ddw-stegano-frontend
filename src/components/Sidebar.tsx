@@ -16,11 +16,13 @@ import {
   SunIcon,
   SparklesIcon,
   EllipsisHorizontalCircleIcon,
+  ChatBubbleOvalLeftEllipsisIcon,
   ChevronUpIcon,
   AcademicCapIcon,
 } from '@heroicons/react/24/outline'
 import { useState, useEffect, useRef } from 'react'
 import { PaintBrushIcon } from '@heroicons/react/24/solid'
+import Chat from './Chat'
 
 const mainNav = [
   { name: '홈', href: '/', icon: HomeIcon },
@@ -60,6 +62,7 @@ export default function Sidebar({
   const pathname = usePathname()
   const router = useRouter()
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+  const [isChatOpen, setIsChatOpen] = useState(false)
   const menuRef = useRef<HTMLLIElement>(null)
 
   useEffect(() => {
@@ -116,6 +119,8 @@ export default function Sidebar({
 
   return (
     <>
+      <Chat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+
       {/* Mobile backdrop (appears when sidebar is open on small screens) */}
       {isSidebarOpen && (
         <div
@@ -246,6 +251,7 @@ export default function Sidebar({
                       }`}
                     />
                   </button>
+
                   <div
                     className={`absolute bottom-full mb-2 w-full bg-gray-800 rounded-md shadow-lg py-1 ring-1 ring-black/5 z-10 transition-all duration-200 ease-in-out ${
                       isUserMenuOpen
@@ -262,6 +268,13 @@ export default function Sidebar({
                         관리자
                       </Link>
                     )}
+                    <button
+                      onClick={() => setIsChatOpen(true)}
+                      className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
+                    >
+                      <ChatBubbleOvalLeftEllipsisIcon className="h-5 w-5" />
+                      채팅
+                    </button>
                     {user && (
                       <button
                         onClick={handleLogout}

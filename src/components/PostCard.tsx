@@ -1,4 +1,9 @@
 import Link from 'next/link'
+import {
+  EyeIcon,
+  HandThumbUpIcon,
+  ChatBubbleOvalLeftEllipsisIcon,
+} from '@heroicons/react/24/solid'
 
 interface Post {
   _id: string
@@ -8,6 +13,7 @@ interface Post {
   createdAt: string
   views: number
   likes: number
+  commentCount: number
 }
 
 interface PostCardProps {
@@ -25,10 +31,10 @@ export default function PostCard({ post }: PostCardProps) {
         <img
           src={post.imageUrl}
           alt={post.title}
-          className="w-full h-48 object-cover"
+          className="w-full h-56 object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-        <h2 className="absolute bottom-2 left-4 text-lg font-semibold text-white truncate w-11/12">
+        <h2 className="absolute bottom-3 left-4 text-xl font-bold text-white truncate w-11/12">
           {post.title}
         </h2>
       </div>
@@ -40,31 +46,16 @@ export default function PostCard({ post }: PostCardProps) {
           </span>
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1" title="조회수">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                className="w-4 h-4"
-              >
-                <path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
-                <path
-                  fillRule="evenodd"
-                  d="M.664 10.59a1.651 1.651 0 0 1 0-1.186A10.004 10.004 0 0 1 10 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0 1 10 17c-4.257 0-7.893-2.66-9.336-6.41ZM14 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <EyeIcon className="w-4 h-4" />
               {post.views}
             </span>
             <span className="flex items-center gap-1" title="추천수">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                className="w-4 h-4"
-              >
-                <path d="M1 8.25a1.25 1.25 0 1 1 2.5 0v7.5a1.25 1.25 0 1 1-2.5 0v-7.5ZM11 3V1.7c0-.268.14-.516.371-.647A.748.748 0 0 1 12.06.94l3.536 3.535a.75.75 0 0 1 0 1.06l-3.536 3.536a.749.749 0 0 1-1.29-.53v-1.3H9.25a1 1 0 0 0-1 1v6a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-6a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v6a3 3 0 0 0 3 3h1.25a3 3 0 0 0 3-3v-6a3 3 0 0 1 3-3h1.25v1.3c0 .414.502.659.82.329l3.536-3.535a.75.75 0 0 0 0-1.06L12.82.328A.749.749 0 0 0 12.06 0H12v.001a.752.752 0 0 0-.19.043C11.588.182 11 .472 11 1.001V3Z" />
-              </svg>
+              <HandThumbUpIcon className="w-4 h-4" />
               {post.likes}
+            </span>
+            <span className="flex items-center gap-1" title="댓글 수">
+              <ChatBubbleOvalLeftEllipsisIcon className="w-4 h-4" />
+              {post.commentCount}
             </span>
           </div>
         </div>
