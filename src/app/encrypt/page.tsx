@@ -2,6 +2,7 @@
 
 import { useState, FormEvent, useEffect, Suspense } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
+import { ArrowPathIcon } from '@heroicons/react/24/outline' // Import the icon
 import { useRouter, useSearchParams } from 'next/navigation'
 
 // useSearchParams를 사용하는 로직을 별도의 컴포넌트로 분리합니다.
@@ -186,9 +187,16 @@ function EncryptForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-purple-800"
+            className="w-full text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-purple-800 flex items-center justify-center"
           >
-            {isLoading ? '업로드 중...' : '게시물 생성'}
+            {isLoading ? (
+              <>
+                <ArrowPathIcon className="h-5 w-5 mr-2 animate-spin" />
+                업로드 중...
+              </>
+            ) : (
+              '게시물 생성'
+            )}
           </button>
           {error && <p className="text-red-400 mt-4 text-center">{error}</p>}
         </form>
