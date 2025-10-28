@@ -31,7 +31,7 @@ export default function CtaBanner({ category }: CtaBannerProps) {
       </h1>
       <p className="mt-4 max-w-2xl mx-auto text-gray-300">
         당신의 소중한 저작물 콘텐츠를 보호하세요. 육안으로 식별 불가능한
-        워터마크로 유출자를 정확히 추적하고, 콘텐츠의 가치를 지킵니다.
+        워터마크로 <br /> 유출자를 정확히 추적하고, 콘텐츠의 가치를 지킵니다.
       </p>
       <div className="mt-8">
         <Link
