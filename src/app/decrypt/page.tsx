@@ -88,18 +88,14 @@ export default function DecryptPage() {
           </button>
         </form>
 
-        {error && (
-          <p className="text-red-500 dark:text-red-400 mt-4 text-center">
-            {error}
-          </p>
-        )}
+        {error && <p className="text-red-400 mt-4 text-center">{error}</p>}
 
         {decryptedMessage && (
-          <div className="mt-8 text-center bg-gray-50 dark:bg-gray-900/50 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-            <h2 className="text-2xl text-purple-600 dark:text-purple-400 font-semibold mb-2">
+          <div className="mt-8 text-center bg-gray-900/50 p-6 rounded-lg border border-gray-700">
+            <h2 className="text-2xl text-purple-400 font-semibold mb-2">
               탐지 결과
             </h2>
-            <p className="text-lg text-gray-800 dark:text-gray-300 font-mono break-all">
+            <p className="text-lg text-gray-300 font-mono break-all">
               {decryptedMessage}
             </p>
           </div>
