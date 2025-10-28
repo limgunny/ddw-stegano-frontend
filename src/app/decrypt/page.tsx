@@ -56,7 +56,7 @@ export default function DecryptPage() {
 
   return (
     <div className="container mx-auto p-4 sm:p-6 lg:p-8">
-      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+      <div className="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-md border border-gray-700">
         <h1 className="text-3xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-sky-400">
           원본 저작자 확인
         </h1>
@@ -64,7 +64,7 @@ export default function DecryptPage() {
           <div>
             <label
               htmlFor="image"
-              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="block mb-2 text-sm font-medium text-gray-300"
             >
               워터마크를 확인할 이미지 업로드
             </label>
@@ -73,16 +73,16 @@ export default function DecryptPage() {
               id="image"
               accept="image/png, image/jpeg"
               onChange={handleImageChange}
-              className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+              className="block w-full text-sm text-gray-400 border border-gray-600 rounded-lg cursor-pointer bg-gray-700 focus:outline-none placeholder-gray-400"
             />
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
+            <p className="mt-1 text-sm text-gray-300">
               PNG, JPG 파일을 업로드하세요.
             </p>
           </div>
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 dark:focus:ring-sky-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-sky-400 dark:disabled:bg-sky-800"
+            className="w-full text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-sky-800"
           >
             {isLoading ? '확인 중...' : '워터마크 확인'}
           </button>

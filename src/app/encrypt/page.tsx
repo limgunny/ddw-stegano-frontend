@@ -92,7 +92,7 @@ function EncryptForm() {
 
   return (
     <div className="container mx-auto p-4 sm:p-6 lg:p-8">
-      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+      <div className="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-md border border-gray-700">
         <h1 className="text-3xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-sky-400">
           새 게시물 작성
         </h1>
@@ -100,7 +100,7 @@ function EncryptForm() {
           <div>
             <label
               htmlFor="title"
-              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="block mb-2 text-sm font-medium text-gray-300"
             >
               제목
             </label>
@@ -109,14 +109,14 @@ function EncryptForm() {
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="bg-gray-50 border border-gray-300 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
+              className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
               required
             />
           </div>
           <div>
             <label
               htmlFor="content"
-              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="block mb-2 text-sm font-medium text-gray-300"
             >
               내용
             </label>
@@ -125,14 +125,14 @@ function EncryptForm() {
               rows={4}
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-purple-500 focus:border-purple-500"
+              className="block p-2.5 w-full text-sm text-white bg-gray-700 rounded-lg border border-gray-600 focus:ring-purple-500 focus:border-purple-500"
               required
             ></textarea>
           </div>
           <div>
             <label
               htmlFor="category"
-              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="block mb-2 text-sm font-medium text-gray-300"
             >
               카테고리
             </label>
@@ -140,7 +140,7 @@ function EncryptForm() {
               id="category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="bg-gray-50 border border-gray-300 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
+              className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
             >
               <option>학습</option>
               <option>일러스트</option>
@@ -153,7 +153,7 @@ function EncryptForm() {
           <div>
             <label
               htmlFor="image"
-              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="block mb-2 text-sm font-medium text-gray-300"
             >
               이미지 업로드
             </label>
@@ -162,11 +162,17 @@ function EncryptForm() {
               id="image"
               accept="image/jpeg, image/png"
               onChange={handleImageChange}
-              className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+              className="block w-full text-sm text-gray-400 border border-gray-600 rounded-lg cursor-pointer bg-gray-700 focus:outline-none placeholder-gray-400"
               required
             />
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
-              PNG, JPG 파일을 업로드하세요.
+            <p className="mt-2 text-sm text-gray-400">
+              PNG, JPG 파일을 업로드하세요. (최대 5MB)
+            </p>
+            <p className="mt-2 text-xs text-yellow-500">
+              <strong>주의:</strong> 스마트폰으로 촬영한 사진과 같이
+              메타데이터가 포함된 이미지를 업로드할 경우 실패할 수 있습니다.
+              메타데이터가 제거된 이미지를 업로드해 주시거나 캡쳐된 카메라
+              이미지를 업로드 해주세요.
             </p>
           </div>
           <button
@@ -176,11 +182,7 @@ function EncryptForm() {
           >
             {isLoading ? '업로드 중...' : '게시물 생성'}
           </button>
-          {error && (
-            <p className="text-red-500 dark:text-red-400 mt-4 text-center">
-              {error}
-            </p>
-          )}
+          {error && <p className="text-red-400 mt-4 text-center">{error}</p>}
         </form>
       </div>
     </div>
