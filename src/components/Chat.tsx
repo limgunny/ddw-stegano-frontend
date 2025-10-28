@@ -39,36 +39,40 @@ export default function Chat({ isOpen, onClose }: ChatProps) {
   const chatWindowRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!isOpen || !user) return
+    if (!isOpen || !user || socket.current) return
 
     // Socket.IO 연결
     socket.current = io(
       process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001'
     )
 
-    socket.current.on('connect', () => {
+    const currentSocket = socket.current
+
+    currentSocket.on('connect', () => {
       console.log('Socket connected')
       // 서버에 자신의 이메일로 룸에 참여
-      socket.current?.emit('join', { email: user.email })
+      currentSocket.emit('join', { email: user.email })
     })
 
-    socket.current.on('receive_message', (message: Message) => {
-      // 현재 보고 있는 채팅방의 메시지만 업데이트
+    currentSocket.on('receive_message', (message: Message) => {
+      // 메시지가 현재 선택된 사용자와의 대화에 속하는 경우에만 화면을 즉시 업데이트
       if (
         (message.sender === user.email &&
           message.receiver === selectedUser?.email) ||
         (message.sender === selectedUser?.email &&
           message.receiver === user.email)
       ) {
-        setMessages((prev) => [...prev, message])
+        setMessages((prevMessages) => [...prevMessages, message])
       }
+      // TODO: 현재 채팅 상대가 아닌 다른 사람에게 메시지가 오면 알림(뱃지 등)을 표시할 수 있습니다.
     })
 
     return () => {
-      socket.current?.disconnect()
+      currentSocket.disconnect()
       console.log('Socket disconnected')
+      socket.current = null
     }
-  }, [isOpen, user, fetchWithAuth, selectedUser?.email])
+  }, [isOpen, user])
 
   useEffect(() => {
     // 메시지 목록이 변경될 때마다 스크롤을 맨 아래로 이동
@@ -199,11 +203,9 @@ export default function Chat({ isOpen, onClose }: ChatProps) {
                 </h2>
               </div>
               <div className="flex-1 p-4 overflow-y-auto space-y-4">
-                {messages.map((msg) => (
+                {messages.map((msg, index) => (
                   <div
-                    // Use a unique key if available, otherwise fallback to a composite key
-                    // The backend now provides `_id` on new messages, so this should be reliable.
-                    key={msg._id || `${msg.sender}-${msg.createdAt}`}
+                    key={msg._id || index} // Use database ID as key, fallback to index
                     className={`flex ${
                       msg.sender === user?.email
                         ? 'justify-end'

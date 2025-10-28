@@ -43,7 +43,7 @@ export default function MyPostsPage() {
       }
       fetchPosts()
     }
-  }, [user, token, authIsLoading, router])
+  }, [user, token, authIsLoading, router, fetchWithAuth])
 
   if (isLoading || authIsLoading) {
     return <p className="text-center mt-10">내 게시물을 불러오는 중...</p>
