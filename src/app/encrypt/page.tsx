@@ -165,14 +165,27 @@ function EncryptForm() {
               className="block w-full text-sm text-gray-400 border border-gray-600 rounded-lg cursor-pointer bg-gray-700 focus:outline-none placeholder-gray-400"
               required
             />
-            <p className="mt-2 text-sm text-gray-400">
+            <p className="mt-1 text-sm text-gray-300">
               PNG, JPG 파일을 업로드하세요. (최대 5MB)
             </p>
-            <p className="mt-2 text-xs text-yellow-500">
-              <strong>주의:</strong> 스마트폰으로 촬영한 사진과 같이
-              메타데이터가 포함된 이미지를 업로드할 경우 실패할 수 있습니다.
-              메타데이터가 제거된 이미지를 업로드해 주시거나 캡쳐된 카메라
-              이미지를 업로드 해주세요.
+          </div>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-purple-800"
+          >
+            {isLoading ? '업로드 중...' : '게시물 생성'}
+          </button>
+          {error && (
+            <p className="text-red-400 mt-4 text-center">
+              {error}
+              <br />
+              <span className="text-xs text-yellow-500">
+                <strong>참고:</strong> 스마트폰으로 촬영한 사진과 같이
+                메타데이터가 포함된 이미지는 업로드에 실패할 수 있습니다. 가급적
+                스크린샷을 이용하거나 메타데이터가 제거된 이미지를 업로드해
+                주세요.
+              </span>
             </p>
           </div>
           <button
