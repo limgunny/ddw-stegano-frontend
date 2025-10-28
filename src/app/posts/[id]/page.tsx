@@ -39,7 +39,7 @@ export default function PostPage() {
         })
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${id}`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${id}`,
         )
         if (!response.ok) {
           throw new Error('게시물을 불러오는데 실패했습니다.')
@@ -48,7 +48,7 @@ export default function PostPage() {
         setPost(data)
       } catch (err) {
         setError(
-          err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.'
+          err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.',
         )
       } finally {
         setIsLoading(false)
@@ -66,7 +66,7 @@ export default function PostPage() {
         `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${post._id}`,
         {
           method: 'DELETE',
-        }
+        },
       )
 
       if (!response.ok) {
@@ -91,7 +91,7 @@ export default function PostPage() {
     try {
       const response = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${post._id}/like`,
-        { method }
+        { method },
       )
       if (!response.ok) throw new Error('추천 처리에 실패했습니다.')
 
@@ -112,6 +112,20 @@ export default function PostPage() {
   return (
     <div className="container mx-auto max-w-4xl p-4">
       <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+        <div className="p-6">
+          <h1 className="text-3xl font-bold text-white mb-2">{post.title}</h1>
+          <div className="flex justify-between items-center text-sm text-gray-400 mb-4">
+            <span>by {post.authorEmail}</span>
+            <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+          </div>
+          <div
+            className="text-gray-300 leading-relaxed break-all"
+            dangerouslySetInnerHTML={{
+              __html: post.content.replace(/\n/g, '<br />'),
+            }}
+          />
+        </div>
+
         {post.isViolation && (
           <div className="bg-red-900/70 p-4 text-center text-white">
             <p className="font-bold">⚠️ 저작권 위반 경고 ⚠️</p>
@@ -128,54 +142,36 @@ export default function PostPage() {
           className="w-full h-auto max-h-[70vh] object-contain bg-black"
         />
         <div className="p-6">
-          <h1 className="text-3xl font-bold text-white mb-2">{post.title}</h1>
-          <div className="flex justify-between items-center text-sm text-gray-400 mb-4">
-            <span>by {post.authorEmail}</span>
-            <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+          <div className="flex items-center justify-center mt-4">
+            <button
+              onClick={handleLike}
+              className={`flex flex-col items-center gap-2 p-4 rounded-lg transition-colors ${
+                isLiked
+                  ? 'text-purple-400'
+                  : 'text-gray-400 hover:bg-gray-700/50 hover:text-white'
+              }`}
+            >
+              <HandThumbUpIcon className="w-10 h-10" />
+              <span className="font-semibold text-lg">{post.likes}</span>
+            </button>
           </div>
-          <div
-            className="text-gray-300 leading-relaxed break-all"
-            dangerouslySetInnerHTML={{
-              __html: post.content.replace(/\n/g, '<br />'),
-            }}
-          />
 
-          <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-700">
+          <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-700">
             <div className="flex items-center gap-4 text-gray-400">
               <span className="flex items-center gap-1.5">
                 <EyeIcon className="w-5 h-5" />
                 {post.views}
               </span>
-              <span className="flex items-center gap-1.5">
-                <HandThumbUpIcon className="w-5 h-5" />
-                {post.likes}
-              </span>
             </div>
-            {user && (
+            {user && (user.role === 'admin' || user.email === post.authorEmail) && (
               <button
-                onClick={handleLike}
-                className={`px-4 py-2 rounded-md text-sm font-semibold transition-colors ${
-                  isLiked
-                    ? 'bg-purple-700 text-white'
-                    : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
-                }`}
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm font-semibold"
               >
-                {isLiked ? '추천 취소' : '추천'}
+                삭제
               </button>
-            )}
-          </div>
-
-          {user &&
-            (user.role === 'admin' || user.email === post.authorEmail) && (
-              <div className="mt-4 flex justify-end gap-2">
-                <button
-                  onClick={handleDelete}
-                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm font-semibold"
-                >
-                  삭제
-                </button>
-              </div>
-            )}
+            </div>
+          )}
           {/* 댓글 섹션 */}
           <CommentSection postId={post._id} />
         </div>

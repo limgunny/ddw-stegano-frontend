@@ -36,6 +36,7 @@ export default function Chat({ isOpen, onClose }: ChatProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<ChatUser[]>([])
+  const chatWindowRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!isOpen || !user) return
@@ -128,9 +129,24 @@ export default function Chat({ isOpen, onClose }: ChatProps) {
 
   if (!isOpen) return null
 
+  const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (
+      chatWindowRef.current &&
+      !chatWindowRef.current.contains(e.target as Node)
+    ) {
+      onClose()
+    }
+  }
+
   return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center">
-      <div className="bg-gray-800 w-full max-w-4xl h-[80vh] rounded-lg shadow-xl flex">
+    <div
+      className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center"
+      onClick={handleOutsideClick}
+    >
+      <div
+        ref={chatWindowRef}
+        className="bg-gray-800 w-full max-w-4xl h-[80vh] rounded-lg shadow-xl flex relative"
+      >
         {/* User List */}
         <div className="w-1/3 border-r border-gray-700 flex flex-col">
           <div className="p-4 border-b border-gray-700 flex-shrink-0">
@@ -177,16 +193,10 @@ export default function Chat({ isOpen, onClose }: ChatProps) {
         <div className="w-2/3 flex flex-col">
           {selectedUser ? (
             <>
-              <div className="p-4 border-b border-gray-700 flex justify-between items-center">
+              <div className="p-4 border-b border-gray-700">
                 <h2 className="text-white text-lg font-semibold">
                   {selectedUser.name}
                 </h2>
-                <button
-                  onClick={onClose}
-                  className="text-gray-400 hover:text-white"
-                >
-                  <XMarkIcon className="w-6 h-6" />
-                </button>
               </div>
               <div className="flex-1 p-4 overflow-y-auto space-y-4">
                 {messages.map((msg, index) => (
@@ -236,15 +246,15 @@ export default function Chat({ isOpen, onClose }: ChatProps) {
           ) : (
             <div className="flex-1 flex flex-col justify-center items-center text-gray-400">
               <p>대화 상대를 선택해주세요.</p>
-              <button
-                onClick={onClose}
-                className="absolute top-4 right-4 text-gray-400 hover:text-white"
-              >
-                <XMarkIcon className="w-6 h-6" />
-              </button>
             </div>
           )}
         </div>
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-white"
+        >
+          <XMarkIcon className="w-6 h-6" />
+        </button>
       </div>
     </div>
   )
